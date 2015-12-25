@@ -11,18 +11,22 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 public class PieceComponent extends JComponent implements MouseListener, ActionListener {
-    private static final long serialVersionUID = 1L;
+
+    private PiecePosition currentPosition;
     private final int diameter;
     private final Color color;
-    private PiecePosition currentPosition;
     private Timer flashTimer;
 
-    public PieceComponent(int diameter, Color color, PiecePosition piecePosition) {
-        this.color = color;
-        this.diameter = diameter;
-        super.setPreferredSize(new Dimension(diameter, diameter));
+    private PieceComponent(PiecePosition piecePosition, int diameter, Color color) {
         moveTo(piecePosition);
-        super.addMouseListener(this);
+        this.diameter = diameter;
+        this.color = color;
+    }
+
+    public static PieceComponent createInstance(PiecePosition piecePosition, int diameter, Color color) {
+        PieceComponent pieceComponent = new PieceComponent(piecePosition, diameter, color);
+        pieceComponent.addMouseListener(pieceComponent);
+        return pieceComponent;
     }
 
     @Override
@@ -32,28 +36,23 @@ public class PieceComponent extends JComponent implements MouseListener, ActionL
         g.fillOval(0, 0, diameter, diameter);
     }
 
-    public final void moveTo(PiecePosition piecePosition) {
-        this.setBounds(piecePosition.getXCoordinate(), piecePosition.getYCoordinate(), piecePosition.getWidth(), piecePosition.getHeight());
-        this.currentPosition = piecePosition;
+    public Color getColor() {
+        return color;
     }
 
     public PiecePosition getPiecePosition() {
         return this.currentPosition;
     }
 
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        Controller.getInstance().clickPiece((PieceComponent) e.getComponent());
+    }
+
+    //flashing effect
     public void select() {
         flashTimer = new Timer(500, this);
         flashTimer.start();
-    }
-
-    public void deSelect() {
-        flashTimer.stop();
-        this.setVisible(true);
-    }
-
-    @Override
-    public void mouseClicked(MouseEvent e) {
-        Controller.getInstance().pieceClicked(e);
     }
 
     @Override
@@ -61,27 +60,32 @@ public class PieceComponent extends JComponent implements MouseListener, ActionL
         this.setVisible(!this.isVisible());
     }
 
-    public Color getColor() {
-        return color;
+    public void deSelect() {
+        flashTimer.stop();
+        this.setVisible(true);
     }
 
+    //end
+    //move piece
+    public final void moveTo(PiecePosition piecePosition) {
+        super.setBounds(piecePosition.getXCoordinate(), piecePosition.getYCoordinate(), piecePosition.getWidth(), piecePosition.getHeight());
+        this.currentPosition = piecePosition;
+    }
+
+    //empty events
     @Override
     public void mousePressed(MouseEvent e) {
-
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-
     }
 
     @Override
     public void mouseEntered(MouseEvent e) {
-
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
-
     }
 }

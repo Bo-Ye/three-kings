@@ -4,30 +4,34 @@ import com.boye.threekings.Controller;
 import com.boye.threekings.PiecePosition;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 public class PositionComponent extends JComponent implements MouseListener {
-    private static final long serialVersionUID = 1L;
+
     private final PiecePosition piecePosition;
 
-    public PositionComponent(int length, PiecePosition piecePosition) {
-        this.piecePosition = piecePosition;
-        super.setPreferredSize(new Dimension(length, length));
+    private PositionComponent(PiecePosition piecePosition) {
         super.setBounds(piecePosition.getXCoordinate(), piecePosition.getYCoordinate(), piecePosition.getWidth(), piecePosition.getHeight());
-        super.addMouseListener(this);
+        this.piecePosition = piecePosition;
+    }
+
+    public static PositionComponent createInstance(PiecePosition piecePosition) {
+        PositionComponent instance = new PositionComponent(piecePosition);
+        instance.addMouseListener(instance);
+        return instance;
     }
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        Controller.getInstance().positionClicked(e);
+        Controller.getInstance().clickPosition((PositionComponent) e.getComponent());
     }
 
     public PiecePosition getPiecePosition() {
         return this.piecePosition;
     }
 
+    //empty events
     @Override
     public void mousePressed(MouseEvent e) {
     }

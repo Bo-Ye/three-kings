@@ -4,22 +4,25 @@ import javax.swing.*;
 import java.awt.*;
 
 public class BoardComponent extends JComponent {
-    private static final long serialVersionUID = 1L;
-    private final int boardSize;
 
-    public BoardComponent(int boardSize) {
-        super.setPreferredSize(new Dimension(boardSize, boardSize));
-        super.setBounds(0, 0, boardSize, boardSize);
-        this.boardSize = boardSize;
+    private final int boardLength;
+
+    private BoardComponent(int boardLength) {
+        super.setBounds(0, 0, boardLength, boardLength);
+        this.boardLength = boardLength;
+    }
+    
+    public static BoardComponent createInstance(int boardLength){
+        return new BoardComponent(boardLength);
     }
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        g.setColor(Color.black);
-        g.drawLine(0, 0, boardSize, boardSize);
-        g.drawLine(boardSize, 0, 0, boardSize);
-        g.drawLine(boardSize / 2, 0, boardSize / 2, boardSize);
-        g.drawLine(0, boardSize / 2, boardSize, boardSize / 2);
+        g.setColor(Color.BLACK);
+        g.drawLine(0, 0, boardLength, boardLength);
+        g.drawLine(boardLength, 0, 0, boardLength);
+        g.drawLine(boardLength / 2, 0, boardLength / 2, boardLength);
+        g.drawLine(0, boardLength / 2, boardLength, boardLength / 2);
     }
 }
